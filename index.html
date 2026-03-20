@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shree Sai Clinic | Doctor Appointment</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+}
+
+nav {
+    background: #0d47a1;
+    padding: 12px;
+    text-align: center;
+}
+
+nav a {
+    color: white;
+    margin: 0 15px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 900px;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #0d47a1;
+}
+
+.clinic {
+    text-align: center;
+    line-height: 1.6;
+}
+
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+input, select, textarea {
+    padding: 10px;
+}
+
+textarea {
+    grid-column: span 2;
+}
+
+button {
+    grid-column: span 2;
+    padding: 12px;
+    background: #1976d2;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.error {
+    color: red;
+    grid-column: span 2;
+}
+
+/* TICK */
+.tick {
+    font-size: 90px;
+    color: green;
+    animation: pop 0.6s ease;
+}
+
+.confirm-text {
+    font-size: 26px;
+    color: #2e7d32;
+}
+
+@keyframes pop {
+    0% {transform: scale(0);}
+    70% {transform: scale(1.3);}
+    100% {transform: scale(1);}
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<a onclick="showSection('formSection')">Home</a>
+<a onclick="showSection('tableSection')">Appointments</a>
+</nav>
+
+<div class="container" id="formSection">
+<h1>Doctor Appointment System</h1>
+
+<div class="clinic">
+<strong>Shree Sai Clinic</strong><br>
+Dr. Sandesh Manwadkar (B.H.M.S)<br><br>
+
+📍 Shop no.2, Opp.Bhimabai Apt. Suryanagar Vitawa Kalwa, behind Octrai naka, Thane, Maharashtra 400605<br>
+📞 +91 8097060012<br><br>
+
+<a href="https://www.google.com/maps/search/Shop+no.2,+Opp.Bhimabai+Apt.+Suryanagar+Vitawa+Kalwa,+behind+Octrai+naka,+Thane,+Maharashtra+400605" target="_blank">
+Open in Google Maps 📍
+</a>
+</div>
+
+<h2>Patient Registration</h2>
+
+<form id="appointmentForm">
+<input type="text" id="name" placeholder="Patient Name">
+<input type="number" id="age" placeholder="Age">
+
+<select id="gender">
+<option value="">Gender</option>
+<option value="Male">Male</option>
+<option value="Female">Female</option>
+<option value="Other">Other</option>
+</select>
+
+<input type="text" id="phone" placeholder="Phone">
+
+<input type="date" id="date">
+
+<select id="slot">
+<option value="">Time Slot</option>
+<option value="10:00 AM - 10:30 AM">10:00 AM - 10:30 AM</option>
+<option value="10:30 AM - 11:00 AM">10:30 AM - 11:00 AM</option>
+<option value="11:00 AM - 11:30 AM">11:00 AM - 11:30 AM</option>
+<option value="11:30 AM - 12:00 PM">11:30 AM - 12:00 PM</option>
+</select>
+
+<textarea id="symptoms" placeholder="Enter Symptoms"></textarea>
+
+<div class="error" id="errorMsg"></div>
+
+<button type="submit">Confirm Appointment</button>
+</form>
+</div>
+
+<!-- CONFIRMATION -->
+<div class="container" id="confirmation" style="display:none;">
+<div class="tick">✅</div>
+<div class="confirm-text">Appointment Confirmed!</div>
+
+<p id="slipData"></p>
+
+<button onclick="window.print()">Print Appointment Slip</button>
+</div>
+
+<!-- TABLE -->
+<div class="container" id="tableSection" style="display:none;">
+<h2>Appointments List</h2>
+
+<table id="appointmentTable">
+<tr>
+<th>Name</th>
+<th>Date</th>
+<th>Slot</th>
+<th>Action</th>
+</tr>
+</table>
+</div>
+
+<script>
+let appointments = [];
+
+function showSection(id){
+document.getElementById("formSection").style.display="none";
+document.getElementById("confirmation").style.display="none";
+document.getElementById("tableSection").style.display="none";
+
+document.getElementById(id).style.display="block";
+}
+
+const form = document.getElementById("appointmentForm");
+const errorMsg = document.getElementById("errorMsg");
+
+form.addEventListener("submit", function(e){
+e.preventDefault();
+
+const name = document.getElementById("name").value.trim();
+const age = document.getElementById("age").value;
+const gender = document.getElementById("gender").value;
+const phone = document.getElementById("phone").value.trim();
+const date = document.getElementById("date").value;
+const slot = document.getElementById("slot").value;
+const symptoms = document.getElementById("symptoms").value.trim();
+
+errorMsg.textContent="";
+
+if(!name || !age || !gender || !phone || !date || !slot || !symptoms){
+errorMsg.textContent="All fields required";
+return;
+}
+
+if(!/^[0-9]{10}$/.test(phone)){
+errorMsg.textContent="Invalid phone";
+return;
+}
+
+// SAVE
+appointments.push({name,date,slot});
+updateTable();
+
+// SLIP
+document.getElementById("slipData").innerHTML =
+`Name: ${name}<br>
+Age: ${age}<br>
+Gender: ${gender}<br>
+Phone: ${phone}<br>
+Date: ${date}<br>
+Time: ${slot}<br>
+Symptoms: ${symptoms}`;
+
+// SHOW CONFIRMATION
+showSection("confirmation");
+
+form.reset();
+});
+
+function updateTable(){
+let table = document.getElementById("appointmentTable");
+
+table.innerHTML =
+`<tr>
+<th>Name</th>
+<th>Date</th>
+<th>Slot</th>
+<th>Action</th>
+</tr>`;
+
+appointments.forEach((a,i)=>{
+table.innerHTML +=
+`<tr>
+<td>${a.name}</td>
+<td>${a.date}</td>
+<td>${a.slot}</td>
+<td><button onclick="deleteAppt(${i})">Delete</button></td>
+</tr>`;
+});
+}
+
+function deleteAppt(i){
+appointments.splice(i,1);
+updateTable();
+}
+</script>
+
+</body>
+</html>
