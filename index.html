@@ -4,19 +4,21 @@
 <meta charset="UTF-8">
 <title>Shree Sai Clinic | Doctor Appointment</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
 <style>
 body {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #e3f2fd, #bbdefb);
 }
 
+/* NAV */
 nav {
     background: #0d47a1;
     padding: 12px;
     text-align: center;
 }
-
 nav a {
     color: white;
     margin: 0 15px;
@@ -24,12 +26,88 @@ nav a {
     font-weight: bold;
 }
 
+/* HERO */
+.hero {
+    position: relative;
+    height: 90vh;
+    background: url('https://images.unsplash.com/photo-1579684385127-1ef15d508118') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: zoomBg 10s ease infinite alternate;
+}
+
+/* OVERLAY */
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(6px);
+    background: rgba(0,0,0,0.5);
+}
+
+/* HERO TEXT */
+.hero-content {
+    position: relative;
+    color: white;
+    text-align: center;
+    max-width: 700px;
+}
+
+.hero-content h1 {
+    font-size: 40px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1s ease forwards;
+}
+
+.hero-content p {
+    font-size: 18px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 0.3s;
+}
+
+.hero-content button {
+    padding: 12px 25px;
+    background: #1976d2;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 0.6s;
+}
+
+.hero-content button:hover {
+    transform: scale(1.05);
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes zoomBg {
+    from {background-size: 100%;}
+    to {background-size: 110%;}
+}
+
+/* CONTAINER */
 .container {
     max-width: 900px;
     margin: 30px auto;
     background: #fff;
     border-radius: 12px;
     padding: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
 h1, h2 {
@@ -42,6 +120,7 @@ h1, h2 {
     line-height: 1.6;
 }
 
+/* FORM */
 form {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -49,7 +128,9 @@ form {
 }
 
 input, select, textarea {
-    padding: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
 }
 
 textarea {
@@ -63,6 +144,7 @@ button {
     color: white;
     border: none;
     cursor: pointer;
+    border-radius: 8px;
 }
 
 .error {
@@ -70,22 +152,19 @@ button {
     grid-column: span 2;
 }
 
-/* TICK */
+/* CONFIRM */
 .tick {
     font-size: 90px;
     color: green;
-    animation: pop 0.6s ease;
+    text-align: center;
 }
 
-.confirm-text {
-    font-size: 26px;
-    color: #2e7d32;
-}
-
-@keyframes pop {
-    0% {transform: scale(0);}
-    70% {transform: scale(1.3);}
-    100% {transform: scale(1);}
+#slipData {
+    background: white;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 15px;
 }
 
 /* TABLE */
@@ -100,6 +179,18 @@ th, td {
     padding: 10px;
     text-align: center;
 }
+
+/* PRINT */
+@media print {
+    body * { visibility: hidden; }
+    #confirmation, #confirmation * { visibility: visible; }
+    #confirmation {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+}
 </style>
 </head>
 
@@ -110,19 +201,25 @@ th, td {
 <a onclick="showSection('tableSection')">Appointments</a>
 </nav>
 
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-content">
+        <h1>Skip the Queue. Book Your Doctor Online.</h1>
+        <p>Your health matters. Book your appointment easily at Shree Sai Clinic.</p>
+        <button onclick="document.getElementById('formSection').scrollIntoView({behavior:'smooth'})">
+            Make Appointment
+        </button>
+    </div>
+</div>
+
 <div class="container" id="formSection">
 <h1>Doctor Appointment System</h1>
 
 <div class="clinic">
 <strong>Shree Sai Clinic</strong><br>
 Dr. Sandesh Manwadkar (B.H.M.S)<br><br>
-
-📍 Shop no.2, Opp.Bhimabai Apt. Suryanagar Vitawa Kalwa, behind Octrai naka, Thane, Maharashtra 400605<br>
-📞 +91 8097060012<br><br>
-
-<a href="https://www.google.com/maps/search/Shop+no.2,+Opp.Bhimabai+Apt.+Suryanagar+Vitawa+Kalwa,+behind+Octrai+naka,+Thane,+Maharashtra+400605" target="_blank">
-Open in Google Maps 📍
-</a>
+📍 Vitawa, Suryan Nagar, Thane<br>
+📞 +91 8097060012
 </div>
 
 <h2>Patient Registration</h2>
@@ -133,21 +230,20 @@ Open in Google Maps 📍
 
 <select id="gender">
 <option value="">Gender</option>
-<option value="Male">Male</option>
-<option value="Female">Female</option>
-<option value="Other">Other</option>
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
 </select>
 
-<input type="text" id="phone" placeholder="Phone">
-
+<input type="text" id="phone" placeholder="Phone Number">
 <input type="date" id="date">
 
 <select id="slot">
 <option value="">Time Slot</option>
-<option value="10:00 AM - 10:30 AM">10:00 AM - 10:30 AM</option>
-<option value="10:30 AM - 11:00 AM">10:30 AM - 11:00 AM</option>
-<option value="11:00 AM - 11:30 AM">11:00 AM - 11:30 AM</option>
-<option value="11:30 AM - 12:00 PM">11:30 AM - 12:00 PM</option>
+<option>10:00 AM - 10:30 AM</option>
+<option>10:30 AM - 11:00 AM</option>
+<option>11:00 AM - 11:30 AM</option>
+<option>11:30 AM - 12:00 PM</option>
 </select>
 
 <textarea id="symptoms" placeholder="Enter Symptoms"></textarea>
@@ -158,45 +254,31 @@ Open in Google Maps 📍
 </form>
 </div>
 
-<!-- CONFIRMATION -->
 <div class="container" id="confirmation" style="display:none;">
 <div class="tick">✅</div>
-<div class="confirm-text">Appointment Confirmed!</div>
-
-<p id="slipData"></p>
-
+<div id="slipData"></div>
 <button onclick="window.print()">Print Appointment Slip</button>
+<button onclick="showSection('formSection')">Book Another</button>
 </div>
 
-<!-- TABLE -->
 <div class="container" id="tableSection" style="display:none;">
 <h2>Appointments List</h2>
-
-<table id="appointmentTable">
-<tr>
-<th>Name</th>
-<th>Date</th>
-<th>Slot</th>
-<th>Action</th>
-</tr>
-</table>
+<table id="appointmentTable"></table>
 </div>
 
 <script>
-let appointments = [];
+let appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+
+window.onload = updateTable;
 
 function showSection(id){
-document.getElementById("formSection").style.display="none";
-document.getElementById("confirmation").style.display="none";
-document.getElementById("tableSection").style.display="none";
-
+["formSection","confirmation","tableSection"].forEach(s=>{
+document.getElementById(s).style.display="none";
+});
 document.getElementById(id).style.display="block";
 }
 
-const form = document.getElementById("appointmentForm");
-const errorMsg = document.getElementById("errorMsg");
-
-form.addEventListener("submit", function(e){
+document.getElementById("appointmentForm").addEventListener("submit", function(e){
 e.preventDefault();
 
 const name = document.getElementById("name").value.trim();
@@ -207,6 +289,7 @@ const date = document.getElementById("date").value;
 const slot = document.getElementById("slot").value;
 const symptoms = document.getElementById("symptoms").value.trim();
 
+const errorMsg = document.getElementById("errorMsg");
 errorMsg.textContent="";
 
 if(!name || !age || !gender || !phone || !date || !slot || !symptoms){
@@ -219,13 +302,22 @@ errorMsg.textContent="Invalid phone";
 return;
 }
 
-// SAVE
+let exists = appointments.some(a => a.date === date && a.slot === slot);
+
+if (exists) {
+    errorMsg.textContent = "This time slot is already booked!";
+    return;
+}
+
 appointments.push({name,date,slot});
+localStorage.setItem("appointments", JSON.stringify(appointments));
+
 updateTable();
 
-// SLIP
 document.getElementById("slipData").innerHTML =
-`Name: ${name}<br>
+`<h3 style="text-align:center;">Appointment Slip</h3>
+<hr>
+Name: ${name}<br>
 Age: ${age}<br>
 Gender: ${gender}<br>
 Phone: ${phone}<br>
@@ -233,10 +325,8 @@ Date: ${date}<br>
 Time: ${slot}<br>
 Symptoms: ${symptoms}`;
 
-// SHOW CONFIRMATION
 showSection("confirmation");
-
-form.reset();
+document.getElementById("appointmentForm").reset();
 });
 
 function updateTable(){
@@ -263,6 +353,7 @@ table.innerHTML +=
 
 function deleteAppt(i){
 appointments.splice(i,1);
+localStorage.setItem("appointments", JSON.stringify(appointments));
 updateTable();
 }
 </script>
